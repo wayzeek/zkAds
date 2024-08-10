@@ -2045,7 +2045,7 @@ dependencies = [
 [[package]]
 name = "wasmi"
 version = "0.31.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#0e2aaab99fce6359b624ad0e745fc2250d3645b2"
+source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#677bf2cba3ad70f90bd4022515899943916219e6"
 dependencies = [
  "anyhow",
  "multi-stash",
@@ -2064,12 +2064,12 @@ dependencies = [
 [[package]]
 name = "wasmi_arena"
 version = "0.4.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#0e2aaab99fce6359b624ad0e745fc2250d3645b2"
+source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#677bf2cba3ad70f90bd4022515899943916219e6"
 
 [[package]]
 name = "wasmi_core"
 version = "0.13.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#0e2aaab99fce6359b624ad0e745fc2250d3645b2"
+source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#677bf2cba3ad70f90bd4022515899943916219e6"
 dependencies = [
  "downcast-rs",
  "libm",
@@ -2081,7 +2081,7 @@ dependencies = [
 [[package]]
 name = "wasmi_wasi"
 version = "0.31.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#0e2aaab99fce6359b624ad0e745fc2250d3645b2"
+source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#677bf2cba3ad70f90bd4022515899943916219e6"
 dependencies = [
  "wasi-cap-std-sync",
  "wasi-common",
@@ -2472,7 +2472,7 @@ dependencies = [
 [[package]]
 name = "zk-engine"
 version = "0.1.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#0e2aaab99fce6359b624ad0e745fc2250d3645b2"
+source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#677bf2cba3ad70f90bd4022515899943916219e6"
 dependencies = [
  "anyhow",
  "arecibo",
@@ -2503,5 +2503,7 @@ name = "zkv"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "serde",
+ "serde_json",
  "zk-engine",
 ]
