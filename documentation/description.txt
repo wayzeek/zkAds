@@ -1,22 +1,9 @@
-
-
-
-
 Le but est de créer un profil utilisateur pour les advertisers qui se base sur le ZKproof et de calculer la distance entre les vecteurs qui constituent le profil utilisateur et le vecteur qui représente l'annonceur. Cette distance permettra de déterminer pour l'annonceur si l'uutilisateur est un client potentiel ou non tout en garantissant l'anonymat des données personnelles de l'utilisateur.
 
-
-
 - On peut hardcoder les profils cibles des annonceurs (ceux qu'ils recherche en tant que client idéal).
-
-
 - On le code en Rust ensuite on le compile en WASM pour pouvoir l'intégrer dans une application web.
-  
-
 - Ce qui est en WASM est publique
-
 - Tout ce qui est publique est hardocder (c'est quelque chose qui peut être divulguer, donc ne pas mettre les donnes d'utilisateurs dedans)
-
 - La seule partie privée est le vecteur en input de l'utilisateur
-
-- Ce qui est envoyé en output c'Est la distance entre l'utilisateur et le profil cible que l'annonceur recherche et la preuve (zkproof) que la distance est bien celle-ci.
+- Ce qui est envoyé en output c'est la distance entre l'utilisateur et le profil cible que l'annonceur recherche et la preuve (zkproof) que la distance est bien celle-ci.
 

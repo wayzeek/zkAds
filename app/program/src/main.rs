@@ -1,114 +1,136 @@
+use serde::Deserialize;
+use std::fs;
+use rust_bert::pipelines::sentence_embeddings::SentenceEmbeddingsBuilder;
+use rust_bert::pipelines::sentence_embeddings::SentenceEmbeddingsModelType;
+use kd_tree::{KdPoint, KdTree};
+use typenum::U384;
+
+#[derive(Deserialize)]
 struct Coordinate {
-    x: f32,
-    y: f32,
+    latitude: f32,
+    longitude: f32,
 }
 
+#[derive(Deserialize)]
+struct Address {
+    street: String,
+    city: String,
+    state: String,
+    zip_code: String,
+    country: String,
+}
+
+#[derive(Deserialize)]
+struct CryptoWallet {
+    balance: f32,
+    currency: String,
+}
+
+#[derive(Deserialize)]
+struct User {
+    first_name: String,
+    last_name: String,
+    phone_number: String,
+    email: String,
+    location: Coordinate,
+    address: Address,
+    age: u32,
+    crypto_wallet: CryptoWallet,
+    interests: Vec<String>,
+}
+
+#[derive(Deserialize)]
 struct Company {
     name: String,
     location: Coordinate,
     distance_threshold: f32,
+    description: String,
+    target_age_range: [u32; 2],
+    crypto_interest: bool,
+    wallet_balance_minimum: f32,
+    user_interests: Vec<String>,
+    address: Address,
+    contact_number: String,
+}
+
+#[derive(Clone)]
+struct EmbeddedCompany {
+    company: Company,
+    embedding: Vec<f32>,
+}
+
+impl KdPoint for EmbeddedCompany {
+    type Scalar = ordered_float::OrderedFloat<f32>;
+    type Dim = U384;
+
+    fn at(&self, k: usize) -> Self::Scalar {
+        ordered_float::OrderedFloat(self.embedding[k])
+    }
 }
 
 fn calculate_distance(user: &Coordinate, company: &Coordinate) -> f32 {
-    let dx = company.x - user.x;
-    let dy = company.y - user.y;
+    let dx = company.latitude - user.latitude;
+    let dy = company.longitude - user.longitude;
     (dx * dx + dy * dy).sqrt()
 }
 
-#[no_mangle]
-fn is_user_close_enough(user_x: f32, user_y: f32) -> i32 {
-    // Define all companies
-    let company1 = Company {
-        name: String::from("Ubisoft"),
-        location: Coordinate {
-            x: 180.15,
-            y: 130.12,
-        },
-        distance_threshold: 5.0,
-    };
-    let company2 = Company {
-        name: String::from("Google"),
-        location: Coordinate { x: 0.13, y: 0.13 },
-        distance_threshold: 5.0,
-    };
-    let company3 = Company {
-        name: String::from("Microsoft"),
-        location: Coordinate {
-            x: 500.12,
-            y: 98.45,
-        },
-        distance_threshold: 5.0,
-    };
-    let company4 = Company {
-        name: String::from("Amazon"),
-        location: Coordinate {
-            x: -123.4,
-            y: -130.12,
-        },
-        distance_threshold: 5.0,
-    };
-    let company5 = Company {
-        name: String::from("Apple"),
-        location: Coordinate {
-            x: 200.15,
-            y: -130.12,
-        },
-        distance_threshold: 5.0,
-    };
-    // Put all the companies into a vector
-    let companies = vec![company1, company2, company3, company4, company5];
-
-    // Create the result vector
-    let mut result = Vec::new();
-
-    //Iterate over all companies
-    for company in &companies {
-        // Calculate distance between user and current company
-        let distance = calculate_distance(
-            &Coordinate {
-                x: user_x,
-                y: user_y,
-            },
-            &company.location,
-        );
-
-        // Check if the user is close enough from the company
-        if distance <= company.distance_threshold {
-            result.push(true);
-        } else {
-            result.push(false);
-        }
-    }
-    boolArrayToInt(result)
+fn encode_user(user: &User, model: &SentenceEmbeddingsBuilder) -> Vec<f32> {
+    model.encode(&[user.interests.join(" ")]).unwrap().to_vec()
 }
 
-fn boolArrayToInt(boolArray: Vec<bool>) -> i32 {
-    let mut result = 0;
-    for i in 0..boolArray.len() {
-        if boolArray[i] {
-            result += 1 << i;
+fn create_kd_tree(embedded_companies: Vec<EmbeddedCompany>) -> KdTree<EmbeddedCompany> {
+    KdTree::build_by_ordered_float(embedded_companies)
+}
+
+fn is_user_a_good_fit(user: &User, kd_tree: &KdTree<EmbeddedCompany>, model: &SentenceEmbeddingsBuilder) -> Vec<String> {
+    let user_embedding = encode_user(user, model);
+
+    // Find the nearest companies in the KD-Tree
+    let nearest_companies = kd_tree.nearests(&user_embedding, 10);
+
+    // Filter companies based on additional criteria
+    nearest_companies.into_iter().filter_map(|(company, _)| {
+        // Check if the user's age is within the company's target age range
+        if user.age >= company.company.target_age_range[0] && user.age <= company.company.target_age_range[1] &&
+           (!company.company.crypto_interest || user.crypto_wallet.balance >= company.company.wallet_balance_minimum) &&
+           calculate_distance(&user.location, &company.company.location) <= company.company.distance_threshold {
+            Some(company.company.name.clone())
+        } else {
+            None
         }
-    }
-    result
+    }).collect()
 }
 
 fn main() {
-    let test = is_user_close_enough(1.0, 1.0);
+    // Load user data from JSON
+    let user_data = fs::read_to_string("user.json").expect("Unable to read file");
+    let user: User = serde_json::from_str(&user_data).expect("JSON was not well-formatted");
 
-    let boolArray = intToBoolArray(test);
+    // Load companies data from JSON
+    let companies_data = fs::read_to_string("companies.json").expect("Unable to read file");
+    let companies: Vec<Company> = serde_json::from_str(&companies_data).expect("JSON was not well-formatted");
 
-    for i in 0..boolArray.len() {
-        println!("{}: {}", i, boolArray[i]);
+    // Initialize the sentence transformer model
+    let model = SentenceEmbeddingsBuilder::remote(SentenceEmbeddingsModelType::AllMiniLmL12V2)
+        .create_model()
+        .expect("Failed to create model");
+
+    // Encode each company's user interests into embeddings
+    let embedded_companies: Vec<EmbeddedCompany> = companies.into_iter()
+        .map(|company| {
+            let embedding = model.encode(&[company.user_interests.join(" ")]).unwrap().to_vec();
+            EmbeddedCompany { company, embedding }
+        })
+        .collect();
+
+    // Create a KD-Tree from the embedded companies
+    let kd_tree = create_kd_tree(embedded_companies);
+
+    // Check which companies the user is a good fit for
+    let matching_companies = is_user_a_good_fit(&user, &kd_tree, &model);
+
+    // Print the matching companies
+    for company in matching_companies {
+        println!("User is a good fit for the company: {}", company);
     }
-
-    println!("Result: {}", test);
-}
-
-fn intToBoolArray(mut n: i32) -> Vec<bool> {
-    let mut result = Vec::new();
-    while n > 0 {
-        result.push(n & 1 == 1);
-        n >>= 1;
-    }
-    result
 }
