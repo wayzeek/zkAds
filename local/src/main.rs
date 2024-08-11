@@ -33,6 +33,10 @@ type BS1<E> = spartan::batched::BatchedRelaxedR1CSSNARK<E, EE1<E>>;
 type S1<E> = RelaxedR1CSSNARK<E, EE1<E>>;
 type S2<E> = RelaxedR1CSSNARK<Dual<E>, EE2<E>>;
 
+//New imports
+use ff::PrimeField;
+use zk_engine::traits::public_values::{PublicValuesTrait, ZKVMPublicValues};
+
 fn main() -> anyhow::Result<()> {
     init_logger();
 
@@ -46,23 +50,40 @@ fn main() -> anyhow::Result<()> {
     // fib(n: i32) -> i32;
     //
     // This means the higher the user input is for `n` the more opcodes will need to be proven
+
+    let mut inputs = std::env::args();
+    let _ = inputs.next(); // Skip the first argument - just the path to executable
+
+    let input_x = inputs.next().unwrap();
+    let input_y = inputs.next().unwrap();
+
+    println!("coordinates: ({}, {})", input_x, input_y);
     let args = WASMArgsBuilder::default()
         .file_path(PathBuf::from(
-            "../app/program/target/wasm32-wasi/release/program.wasm",
-        ))
+            "app/program/target/wasm32-wasi/release/program.wasm",
+        )) // Only works when using the make generate_proof command - else the path would be wrong
         .invoke(Some(String::from("is_user_close_enough")))
-        .func_args(vec![String::from("0"), String::from("12.0"), String::from("0.0")])
+        .func_args(vec![
+            String::from("0"),
+            String::from(input_x),
+            String::from(input_y),
+        ])
         .build();
     let mut wasm_ctx = WASMCtx::new_from_file(args)?;
 
     // json-serialized proof and public values
-    let (proof, pp, po, pi) = prove_execution_batched(&mut wasm_ctx)?;
+    // let (proof, pp, po, pi) = prove_execution_batched(&mut wasm_ctx)?;
+    let (proof, public_values) =
+        BatchedZKEProof::<E1, BS1<E1>, S1<E1>, S2<E1>>::prove_wasm(&mut wasm_ctx)?;
 
+    let zi = public_values.execution().public_outputs();
+    println!("zi: {:?}", zi);
+    println!("Current path: {:?}", std::env::current_dir()?);
     // Save the serialized proof and public parameters to files
-    save_to_file("proof/proof.json", &proof)?;
-    save_to_file("proof/public_parameters.json", &pp)?;
-    save_to_file("proof/po.json", &po)?;
-    save_to_file("proof/pi.json", &pi)?;
+    // save_to_file("proof/proof.json", &proof)?;
+    // save_to_file("proof/public_parameters.json", &pp)?;
+    // save_to_file("proof/po.json", &po)?;
+    // save_to_file("proof/pi.json", &pi)?;
     Ok(())
 }
 
