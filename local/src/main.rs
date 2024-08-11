@@ -48,7 +48,7 @@ fn main() -> anyhow::Result<()> {
     // This means the higher the user input is for `n` the more opcodes will need to be proven
     let args = WASMArgsBuilder::default()
         .file_path(PathBuf::from(
-            "../code/target/wasm32-wasi/release/code.wasm",
+            "../app/program/target/wasm32-wasi/release/program.wasm",
         ))
         .invoke(Some(String::from("is_user_close_enough")))
         .func_args(vec![String::from("0"), String::from("12.0"), String::from("0.0")])
