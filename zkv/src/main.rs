@@ -63,19 +63,7 @@ fn main() -> anyhow::Result<()> {
     save_to_file("proof/public_parameters.json", &pp)?;
     save_to_file("proof/po.json", &po)?;
     save_to_file("proof/pi.json", &pi)?;
-
-    // deserialize proof and public parameters
-    let proof: BatchedExecutionProof<E1, BS1<E1>, S2<E1>> = serde_json::from_str(&proof).unwrap();
-    let pp: SuperNovaPublicParams<E1> = serde_json::from_str(&pp).unwrap();
-    let po: Vec<<PallasEngine as Engine>::Scalar> = serde_json::from_str(&po).unwrap();
-    let pi: Vec<<PallasEngine as Engine>::Scalar> = serde_json::from_str(&pi).unwrap();
-
-    let proof = BatchedZKEExecutionProof::<E1, BS1<E1>, S1<E1>, S2<E1>>::new(proof);
-    let public_params = BatchedExecutionPublicParams::<E1, BS1<E1>, S2<E1>>::from(pp);
-    let public_values = ExecutionPublicValues::new(public_params, &po, &pi);
-
-    let result = proof.verify_wasm_execution(public_values)?;
-    Ok(assert!(result))
+    Ok(())
 }
 
 fn save_to_file(filename: &str, data: &str) -> anyhow::Result<()> {
