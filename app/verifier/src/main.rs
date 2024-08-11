@@ -1,8 +1,8 @@
 #![allow(unused)]
 
+use std::fs::read_to_string;
 use std::fs::File;
 use std::path::PathBuf;
-use std::fs::read_to_string;
 
 // Backend imports
 use serde::Deserialize;
@@ -35,12 +35,11 @@ type S1<E> = RelaxedR1CSSNARK<E, EE1<E>>;
 type S2<E> = RelaxedR1CSSNARK<Dual<E>, EE2<E>>;
 
 fn main() -> anyhow::Result<()> {
-
-     // Load JSON data from files into strings
-     let proof = read_to_string("../../local/proof/proof.json")?;
-     let pp = read_to_string("../../local/proof/public_parameters.json")?;
-     let po = read_to_string("../../local/proof/po.json")?;
-     let pi = read_to_string("../../local/proof/pi.json")?;
+    // Load JSON data from files into strings
+    let proof = read_to_string("local/proof/proof.json")?; // only works from repo root or with makefile command (relative path from repo root)
+    let pp = read_to_string("local/proof/public_parameters.json")?;
+    let po = read_to_string("local/proof/po.json")?;
+    let pi = read_to_string("local/proof/pi.json")?;
 
     // deserialize proof and public parameters
     let proof: BatchedExecutionProof<E1, BS1<E1>, S2<E1>> = serde_json::from_str(&proof).unwrap();
@@ -50,13 +49,12 @@ fn main() -> anyhow::Result<()> {
 
     let proof = BatchedZKEExecutionProof::<E1, BS1<E1>, S1<E1>, S2<E1>>::new(proof);
     let public_params = BatchedExecutionPublicParams::<E1, BS1<E1>, S2<E1>>::from(pp);
-    let public_values = ExecutionPublicValues::new(public_params, &po, &pi);
+    let public_values = ExecutionPublicValues::new(public_params, &pi, &po);
 
     let result = proof.verify_wasm_execution(public_values)?;
     if result == true {
         println!("ZKP is valid !")
-    }
-    else {
+    } else {
         println!("ZKP is invalid !")
     }
     Ok(assert!(result))

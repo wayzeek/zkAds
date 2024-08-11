@@ -73,12 +73,27 @@ fn main() -> anyhow::Result<()> {
 
     // json-serialized proof and public values
     // let (proof, pp, po, pi) = prove_execution_batched(&mut wasm_ctx)?;
-    let (proof, public_values) =
+    let (proof, public_values, wasm_func_res) =
         BatchedZKEProof::<E1, BS1<E1>, S1<E1>, S2<E1>>::prove_wasm(&mut wasm_ctx)?;
 
-    let zi = public_values.execution().public_outputs();
-    println!("zi: {:?}", zi);
-    println!("Current path: {:?}", std::env::current_dir()?);
+    let result = wasm_func_res.iter().next().unwrap().i32().unwrap();
+
+    let proof_string = serde_json::to_string(&proof.execution_proof)?;
+    let pp_string = serde_json::to_string(&public_values.execution().public_params().pp)?;
+    let po_string = serde_json::to_string(&public_values.execution().public_outputs())?;
+    let pi_string = serde_json::to_string(&public_values.execution().public_inputs())?;
+
+    // save to files
+    save_to_file("local/proof/proof.json", &proof_string)?;
+    save_to_file("local/proof/public_parameters.json", &pp_string)?;
+    save_to_file("local/proof/po.json", &po_string)?;
+    save_to_file("local/proof/pi.json", &pi_string)?;
+
+    let bool_array = int_to_bool_array(result);
+
+    for i in 0..bool_array.len() {
+        println!("{}: {}", i, bool_array[i]);
+    }
     // Save the serialized proof and public parameters to files
     // save_to_file("proof/proof.json", &proof)?;
     // save_to_file("proof/public_parameters.json", &pp)?;
@@ -92,4 +107,13 @@ fn save_to_file(filename: &str, data: &str) -> anyhow::Result<()> {
     file.write_all(data.as_bytes())?;
     println!("Data written to {}", filename);
     Ok(())
+}
+
+fn int_to_bool_array(mut n: i32) -> Vec<bool> {
+    let mut result = Vec::new();
+    while n > 0 {
+        result.push(n & 1 == 1);
+        n >>= 1;
+    }
+    result
 }
