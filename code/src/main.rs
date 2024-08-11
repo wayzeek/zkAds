@@ -1,73 +1,76 @@
-pub struct User {
-    name: String,
+struct Coordinate {
     x: f32,
     y: f32,
 }
 
-pub fn calculate_distance(user1: &User, user2: &User) -> f32 {
-    let dx = user2.x - user1.x;
-    let dy = user2.y - user1.y;
+struct Company {
+    name : String,
+    location : Coordinate,
+    distance_threshold : f32,
+}
+
+fn calculate_distance(user: &Coordinate, company: &Coordinate) -> f32 {
+    let dx = company.x - user.x;
+    let dy = company.y - user.y;
     (dx * dx + dy * dy).sqrt()
 }
 
 #[no_mangle]
-pub fn give_me_floats(x: f32, y: f32) -> f32 {
-    println!("x: {}, y: {}", x, y);
-    let sum = x + y;
-    println!("sum: {}", sum);
-    sum
-}
+fn is_user_close_enough(user_x : f32, user_y : f32) -> Vec<bool> {
+    
+    // Define all companies
+    let company1 = Company {
+        name : String::from("Ubisoft"),
+        location : Coordinate {x : 180.15, y : 130.12},
+        distance_threshold : 5.0
+    };
+    let company2 = Company {
+        name : String::from("Google"),
+        location : Coordinate {x : 0.13, y : 0.13},
+        distance_threshold : 5.0
+    };
+    let company3 = Company {
+        name : String::from("Microsoft"),
+        location : Coordinate {x : 500.12, y : 98.45},
+        distance_threshold : 5.0
+    };
+    let company4 = Company {
+        name : String::from("Amazon"),
+        location : Coordinate {x : -123.4, y : -130.12},
+        distance_threshold : 5.0
+    };
+    let company5 = Company {
+        name : String::from("Apple"),
+        location : Coordinate {x : 200.15, y : -130.12},
+        distance_threshold : 5.0
+    };
+    // Put all the companies into a vector
+    let companies = vec![company1, company2, company3, company4, company5];
 
-#[no_mangle]
-pub fn give_me_ints(x: i32, y: i32) -> i32 {
-    println!("x: {}, y: {}", x, y);
-    let sum = x + y;
-    println!("sum: {}", sum);
-    sum
-}
+    // Create the result vector
+    let mut result = Vec::new();
 
-pub fn find_nearest_company(user: User, mut companies: Vec<User>) -> User {
-    if companies.len() < 2 {
-        companies.remove(0) // remove returns the element, taking ownership
-    } else {
-        let mut smallest_distance = calculate_distance(&user, &companies[0]);
-        let mut result_index = 0;
+    //Iterate over all companies
+    for company in &companies {
+        // Calculate distance between user and current company
+        let distance = calculate_distance(&Coordinate {x : user_x, y : user_y}, &company.location);
 
-        for (i, company) in companies.iter().enumerate() {
-            let distance = calculate_distance(&user, company);
-            if distance < smallest_distance {
-                smallest_distance = distance;
-                result_index = i;
-            }
+        // Check if the user is close enough from the company
+        if distance <= company.distance_threshold {
+            result.push(true);
         }
-
-        companies.remove(result_index) // remove returns the element, taking ownership
+        else {
+            result.push(false);
+        }
     }
+    result
+
 }
 
 fn main() {
-    let user1 = User {
-        name: String::from("Valentin"),
-        x: 42.42,
-        y: 56.30,
-    };
+    let test = is_user_close_enough(1.0, 1.0);
 
-    let company1 = User {
-        name: String::from("Ubisoft"),
-        x: 40.40,
-        y: 56.30,
-    };
-    let company2 = User {
-        name: String::from("Google"),
-        x: -42.42,
-        y: 56.30,
-    };
-
-    let companies = vec![company1, company2];
-
-    let nearest_company = find_nearest_company(user1, companies);
-    println!(
-        "Nearest company is {} at: ({}, {})",
-        nearest_company.name, nearest_company.x, nearest_company.y
-    );
+    for line in &test {
+        println!("{line}");
+    }
 }
