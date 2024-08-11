@@ -2056,7 +2056,7 @@ dependencies = [
 [[package]]
 name = "wasmi"
 version = "0.31.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#81c36bc0bc0226712380dc79d43016d70f80e03c"
+source = "git+https://github.com/AntoineF4C5/zkEngine_dev?branch=main#58ee5848b0f430dfa62011e0e167a3fbe19b862f"
 dependencies = [
  "anyhow",
  "multi-stash",
@@ -2075,12 +2075,12 @@ dependencies = [
 [[package]]
 name = "wasmi_arena"
 version = "0.4.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#81c36bc0bc0226712380dc79d43016d70f80e03c"
+source = "git+https://github.com/AntoineF4C5/zkEngine_dev?branch=main#58ee5848b0f430dfa62011e0e167a3fbe19b862f"
 
 [[package]]
 name = "wasmi_core"
 version = "0.13.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#81c36bc0bc0226712380dc79d43016d70f80e03c"
+source = "git+https://github.com/AntoineF4C5/zkEngine_dev?branch=main#58ee5848b0f430dfa62011e0e167a3fbe19b862f"
 dependencies = [
  "downcast-rs",
  "libm",
@@ -2092,7 +2092,7 @@ dependencies = [
 [[package]]
 name = "wasmi_wasi"
 version = "0.31.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#81c36bc0bc0226712380dc79d43016d70f80e03c"
+source = "git+https://github.com/AntoineF4C5/zkEngine_dev?branch=main#58ee5848b0f430dfa62011e0e167a3fbe19b862f"
 dependencies = [
  "wasi-cap-std-sync",
  "wasi-common",
@@ -2483,7 +2483,7 @@ dependencies = [
 [[package]]
 name = "zk-engine"
 version = "0.1.0"
-source = "git+https://github.com/ICME-Lab/zkEngine_dev?branch=main#81c36bc0bc0226712380dc79d43016d70f80e03c"
+source = "git+https://github.com/AntoineF4C5/zkEngine_dev?branch=main#58ee5848b0f430dfa62011e0e167a3fbe19b862f"
 dependencies = [
  "anyhow",
  "arecibo",
