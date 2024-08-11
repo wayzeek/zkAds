@@ -62,7 +62,7 @@ zkAds was developed during the [zkHack Montreal hackathon](https://www.zkmontrea
 To get started with zkAds, clone the repository and follow the instructions.
 
 ```bash
-git clone https://github.com/yourusername/zkAds.git
+git clone https://github.com/wayzeek/zkAds.git
 cd zkAds
 ```
 
