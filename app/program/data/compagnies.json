@@ -1,0 +1,92 @@
+[
+    {
+        "name": "Ubisoft",
+        "location": {"x": 180.15, "y": 130.12},
+        "distance_threshold": 5.0,
+        "description": "A leading creator, publisher and distributor of interactive entertainment and services.",
+        "target_age_range": [20, 30],
+        "crypto_interest": true,
+        "wallet_balance_minimum": 50000.0,
+        "user_interests": ["gaming", "entertainment", "e-sports"],
+        "address": {
+            "street": "5505 Boulevard Saint-Laurent",
+            "city": "Montreal",
+            "state": "QC",
+            "zip_code": "H2T 1S6",
+            "country": "Canada"
+        },
+        "contact_number": "+1-514-499-9999"
+    },
+    {
+        "name": "Google",
+        "location": {"x": 0.13, "y": 0.13},
+        "distance_threshold": 5.0,
+        "description": "An American multinational technology company specializing in Internet-related services and products.",
+        "target_age_range": [23, 30],
+        "crypto_interest": true,
+        "wallet_balance_minimum": 100000.0,
+        "user_interests": ["technology", "software", "internet services"],
+        "address": {
+            "street": "1600 Amphitheatre Parkway",
+            "city": "Mountain View",
+            "state": "CA",
+            "zip_code": "94043",
+            "country": "USA"
+        },
+        "contact_number": "+1-650-253-0000"
+    },
+    {
+        "name": "Microsoft",
+        "location": {"x": 500.12, "y": 98.45},
+        "distance_threshold": 5.0,
+        "description": "A technology company that produces computer software, consumer electronics, personal computers, and related services.",
+        "target_age_range": [21, 30],
+        "crypto_interest": true,
+        "wallet_balance_minimum": 75000.0,
+        "user_interests": ["software development", "tech innovation", "business solutions"],
+        "address": {
+            "street": "1 Microsoft Way",
+            "city": "Redmond",
+            "state": "WA",
+            "zip_code": "98052",
+            "country": "USA"
+        },
+        "contact_number": "+1-425-882-8080"
+    },
+    {
+        "name": "Amazon",
+        "location": {"x": -123.4, "y": -130.12},
+        "distance_threshold": 5.0,
+        "description": "An American multinational technology company focusing on e-commerce, cloud computing, and artificial intelligence.",
+        "target_age_range": [23, 30],
+        "crypto_interest": true,
+        "wallet_balance_minimum": 60000.0,
+        "user_interests": ["e-commerce", "cloud computing", "AI technology"],
+        "address": {
+            "street": "410 Terry Ave N",
+            "city": "Seattle",
+            "state": "WA",
+            "zip_code": "98109",
+            "country": "USA"
+        },
+        "contact_number": "+1-206-266-1000"
+    },
+    {
+        "name": "Apple",
+        "location": {"x": 200.15, "y": -130.12},
+        "distance_threshold": 5.0,
+        "description": "An American multinational technology company that designs, manufactures, and markets consumer electronics, personal computers, and software.",
+        "target_age_range": [20, 30],
+        "crypto_interest": true,
+        "wallet_balance_minimum": 90000.0,
+        "user_interests": ["consumer electronics", "innovation", "design"],
+        "address": {
+            "street": "1 Apple Park Way",
+            "city": "Cupertino",
+            "state": "CA",
+            "zip_code": "95014",
+            "country": "USA"
+        },
+        "contact_number": "+1-408-996-1010"
+    }
+]

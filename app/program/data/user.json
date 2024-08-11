@@ -1,0 +1,20 @@
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone_number": "+1-555-1234",
+    "email": "john.doe@example.com",
+    "location": {"latitude": 37.7749, "longitude": -122.4194},
+    "address": {
+        "street": "123 Main St",
+        "city": "Springfield",
+        "state": "IL",
+        "zip_code": "62701",
+        "country": "USA"
+    },
+    "age": 25,
+    "crypto_wallet": {
+        "balance": 85000.0,
+        "currency": "USD"
+    },
+    "interests": ["gaming", "technology", "crypto", "entertainment"]
+}
