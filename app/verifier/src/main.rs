@@ -37,10 +37,10 @@ type S2<E> = RelaxedR1CSSNARK<Dual<E>, EE2<E>>;
 fn main() -> anyhow::Result<()> {
 
      // Load JSON data from files into strings
-     let proof = read_to_string("../zkv/proof/proof.json")?;
-     let pp = read_to_string("../zkv/proof/public_parameters.json")?;
-     let po = read_to_string("../zkv/proof/po.json")?;
-     let pi = read_to_string("../zkv/proof/pi.json")?;
+     let proof = read_to_string("../../local/proof/proof.json")?;
+     let pp = read_to_string("../../local/proof/public_parameters.json")?;
+     let po = read_to_string("../../local/proof/po.json")?;
+     let pi = read_to_string("../../local/proof/pi.json")?;
 
     // deserialize proof and public parameters
     let proof: BatchedExecutionProof<E1, BS1<E1>, S2<E1>> = serde_json::from_str(&proof).unwrap();

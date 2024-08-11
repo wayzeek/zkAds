@@ -1,3 +1,4 @@
-zkv/proof/
-code/target/
-verifier/target/
+local/proof/
+local/target/
+app/program/target/
+app/verifier/target/
