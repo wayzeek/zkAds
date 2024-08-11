@@ -50,8 +50,8 @@ fn main() -> anyhow::Result<()> {
         .file_path(PathBuf::from(
             "../code/target/wasm32-wasi/release/code.wasm",
         ))
-        .invoke(Some(String::from("give_me_ints")))
-        .func_args(vec![String::from("103"), String::from("125")])
+        .invoke(Some(String::from("is_user_close_enough")))
+        .func_args(vec![String::from("0"), String::from("12.0"), String::from("0.0")])
         .build();
     let mut wasm_ctx = WASMCtx::new_from_file(args)?;
 
@@ -69,8 +69,6 @@ fn main() -> anyhow::Result<()> {
     let pp: SuperNovaPublicParams<E1> = serde_json::from_str(&pp).unwrap();
     let po: Vec<<PallasEngine as Engine>::Scalar> = serde_json::from_str(&po).unwrap();
     let pi: Vec<<PallasEngine as Engine>::Scalar> = serde_json::from_str(&pi).unwrap();
-
-    println!("Proof verification result: {:?}", pi);
 
     let proof = BatchedZKEExecutionProof::<E1, BS1<E1>, S1<E1>, S2<E1>>::new(proof);
     let public_params = BatchedExecutionPublicParams::<E1, BS1<E1>, S2<E1>>::from(pp);
