@@ -1,5 +1,7 @@
 # 🚀 zkAds
 
+![cover](https://github.com/user-attachments/assets/67ecc3cd-6ac7-4d28-aa6f-5252bc110d50)
+
 ## Overview
 
 **zkAds** is a cutting-edge personal data privacy solution that keeps your data safe from targeted advertisers using Zero Knowledge Proof (ZKP) technology. Our system ensures that your data remains private while still allowing advertisers to determine if you meet their criteria for targeted ads—without ever revealing your personal information.
