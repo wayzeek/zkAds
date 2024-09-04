@@ -64,7 +64,6 @@ fn main() -> anyhow::Result<()> {
         )) // Only works when using the make generate_proof command - else the path would be wrong
         .invoke(Some(String::from("is_user_close_enough")))
         .func_args(vec![
-            String::from("0"),
             String::from(input_x),
             String::from(input_y),
         ])
